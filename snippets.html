@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+</head>
+<body>
+<script>
+  function connectTheDots(chartElmt){
+    let graphRoot = chartElmt.querySelector('.graph');
+    let graphWidth = graphRoot.getBoundingClientRect().width;
+    let graphHeight = graphRoot.getBoundingClientRect().height;
+    let allDots = graphRoot.querySelectorAll('.graph-point');
+    allDots.forEach((el,i)=>{
+      if(i+1===allDots.length){return;}
+      let xOffsetPct = (100 / allDots.length)+1;
+      let thisDotX = percentOfRange(allDots[i].offsetParent.offsetLeft+xOffsetPct, 0, graphWidth);
+      let thisDotY = percentOfRange(allDots[i].offsetTop, 0, graphHeight);
+      let nextDotX = percentOfRange(allDots[i+1].offsetParent.offsetLeft+xOffsetPct, 0, graphWidth);
+      let nextDotY = percentOfRange(allDots[i+1].offsetTop, 0, graphHeight);
+      drawLine(graphRoot, thisDotX, thisDotY, nextDotX, nextDotY, 'black', '1');
+    });
+  }
+  function drawLine(rootElmt, X1, Y1, X2, Y2, color, width) {
+    //drawLine(10, 10, 100, 200, 'red', 5)
+    let x1 = X1, y1 = Y1, x2 = X2, y2 = Y2;
+    if (X1 > X2) { x1 = X2; y1 = Y2; x2 = X1; y2 = Y1 }
+    const dx = x1 - x2
+    const dy = y1 - y2
+    const d = Math.sqrt(dx * dx + dy * dy);
+    const a = Math.atan(dy / dx);
+    const el = document.createElement('span');
+    el.setAttribute('style', `border-top:${width}px solid ${color};position:absolute;top:${y1}%;left:${x1}%;
+    width:${d}%;height:0;transform:translate(-${d/2}%,0) rotate(${a}rad) translate(${d/2}%,0)`);
+    // el.setAttribute('style', `border-top:${width}px solid ${color};position:absolute;top:${y1}px;left:${x1}px;
+    // width:${d}px;height:0;transform:translate(-${d/2}px,0) rotate(${a}rad) translate(${d/2}px,0)`);
+    rootElmt.appendChild(el);
+  }
+  /*
+    let lineSpan = `
+    <span style="border-top:solid black 1px;position:absolute;
+    top:${y1}px;left:${x1}px;width:${d}px;height:0;transform:translate(-${d/2}px,0) rotate(${a}rad) translate(${d/2}px,0)"></span>
+    `;
+  */
+
+</script>
+</body>
+</html>
